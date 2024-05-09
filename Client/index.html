@@ -8,54 +8,26 @@
 </head>
 <body>
     <h1>Tic Tac Toe Game</h1>
-
-    <div id="authSection">
-        <h2>Login</h2>
-        <form id="loginForm">
-            <input type="text" id="loginUsername" placeholder="Username" required>
-            <input type="password" id="loginPassword" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-
-        <h2>Register</h2>
-        <form id="registerForm">
-            <input type="text" id="registerUsername" placeholder="Username" required>
-            <input type="password" id="registerPassword" placeholder="Password" required>
-            <button type="submit">Register</button>
-        </form>
+    <div id="gameBoard">
+        <table>
+            <tr>
+                <td data-row="0" data-col="0"></td>
+                <td data-row="0" data-col="1"></td>
+                <td data-row="0" data-col="2"></td>
+            </tr>
+            <tr>
+                <td data-row="1" data-col="0"></td>
+                <td data-row="1" data-col="1"></td>
+                <td data-row="1" data-col="2"></td>
+            </tr>
+            <tr>
+                <td data-row="2" data-col="0"></td>
+                <td data-row="2" data-col="1"></td>
+                <td data-row="2" data-col="2"></td>
+            </tr>
+        </table>
     </div>
-
-    <div id="gameSection" style="display:none;">
-        <button id="createGameButton">Create New Game</button>
-
-        <h2>Active Games</h2>
-        <div id="activeGames"></div>
-
-        <h2>Completed Games</h2>
-        <div id="completedGames"></div>
-
-        <div id="gameBoard" style="display:none;">
-            <h2>Game Board</h2>
-            <table>
-                <tr>
-                    <td data-row="0" data-col="0" onclick="makeMove(0, 0, 'X')"></td>
-                    <td data-row="0" data-col="1" onclick="makeMove(0, 1, 'X')"></td>
-                    <td data-row="0" data-col="2" onclick="makeMove(0, 2, 'X')"></td>
-                </tr>
-                <tr>
-                    <td data-row="1" data-col="0" onclick="makeMove(1, 0, 'X')"></td>
-                    <td data-row="1" data-col="1" onclick="makeMove(1, 1, 'X')"></td>
-                    <td data-row="1" data-col="2" onclick="makeMove(1, 2, 'X')"></td>
-                </tr>
-                <tr>
-                    <td data-row="2" data-col="0" onclick="makeMove(2, 0, 'X')"></td>
-                    <td data-row="2" data-col="1" onclick="makeMove(2, 1, 'X')"></td>
-                    <td data-row="2" data-col="2" onclick="makeMove(2, 2, 'X')"></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
+    <button onclick="resetGame()">Reset Game</button>
     <script src="script.js"></script>
 </body>
 </html>
