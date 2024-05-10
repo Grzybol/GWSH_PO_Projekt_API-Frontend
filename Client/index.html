@@ -27,30 +27,44 @@
 
     <div id="gameSection" style="display:none;">
         <button id="createGameButton">Create New Game</button>
+        <button id="backToHomeButton" style="display:none;">Back to Home</button>
+
+        <h2>Current Player: <span id="currentPlayer">X</span></h2>
 
         <h2>Active Games</h2>
-        <div id="activeGames"></div>
+        <table id="activeGamesTable">
+            <thead>
+                <tr>
+                    <th>Game ID</th>
+                    <th>Players</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="activeGames"></tbody>
+        </table>
 
         <h2>Completed Games</h2>
         <div id="completedGames"></div>
+
+        <input type="hidden" id="currentGameId" value="">
 
         <div id="gameBoard" style="display:none;">
             <h2>Game Board</h2>
             <table>
                 <tr>
-                    <td data-row="0" data-col="0" onclick="makeMove(0, 0, 'X')"></td>
-                    <td data-row="0" data-col="1" onclick="makeMove(0, 1, 'X')"></td>
-                    <td data-row="0" data-col="2" onclick="makeMove(0, 2, 'X')"></td>
+                    <td data-row="0" data-col="0"></td>
+                    <td data-row="0" data-col="1"></td>
+                    <td data-row="0" data-col="2"></td>
                 </tr>
                 <tr>
-                    <td data-row="1" data-col="0" onclick="makeMove(1, 0, 'X')"></td>
-                    <td data-row="1" data-col="1" onclick="makeMove(1, 1, 'X')"></td>
-                    <td data-row="1" data-col="2" onclick="makeMove(1, 2, 'X')"></td>
+                    <td data-row="1" data-col="0"></td>
+                    <td data-row="1" data-col="1"></td>
+                    <td data-row="1" data-col="2"></td>
                 </tr>
                 <tr>
-                    <td data-row="2" data-col="0" onclick="makeMove(2, 0, 'X')"></td>
-                    <td data-row="2" data-col="1" onclick="makeMove(2, 1, 'X')"></td>
-                    <td data-row="2" data-col="2" onclick="makeMove(2, 2, 'X')"></td>
+                    <td data-row="2" data-col="0"></td>
+                    <td data-row="2" data-col="1"></td>
+                    <td data-row="2" data-col="2"></td>
                 </tr>
             </table>
         </div>
