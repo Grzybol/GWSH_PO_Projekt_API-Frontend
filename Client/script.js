@@ -161,7 +161,6 @@ async function joinGame(player, gameId) {
         console.error('Error joining game:', error);
     }
 }
-
 // Function to hide game lists and show the back button
 function hideGameLists() {
     document.getElementById('createGameButton').style.display = 'none';
@@ -207,7 +206,6 @@ async function makeMove(row, col, player) {
         console.error('Error making move:', error);
     }
 }
-
 // Function to update the board and ensure event handlers are bound correctly
 function updateBoard(game) {
     console.log('Updating board for game:', game);
@@ -297,6 +295,12 @@ function updateActiveGames(games) {
         activeGamesTbody.appendChild(row);
     });
 }
+// Ensure initial setup
+document.addEventListener('DOMContentLoaded', () => {
+    fetchActiveGames();
+    fetchCompletedGames();
+    console.log('DOM fully loaded and parsed');
+});
 
 function updateCompletedGames(games) {
     const completedGamesDiv = document.getElementById('completedGames');
@@ -307,17 +311,6 @@ function updateCompletedGames(games) {
         completedGamesDiv.appendChild(gameInfo);
     });
 }
-
-function resetGame() {
-    // Resetowanie gry może wymagać dodatkowej logiki po stronie serwera
-    location.reload();  // Tymczasowe rozwiązanie
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    fetchActiveGames();
-    fetchCompletedGames();
-    console.log('DOM fully loaded and parsed');
-});
 
 document.getElementById('loginForm').addEventListener('submit', loginUser);
 document.getElementById('registerForm').addEventListener('submit', registerUser);

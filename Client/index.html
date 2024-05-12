@@ -8,25 +8,21 @@
 </head>
 <body>
     <h1>Tic Tac Toe Game</h1>
-    
-    <div id="gameBoard">
-        <table>
-            <tr>
-                <td data-row="0" data-col="0"></td>
-                <td data-row="0" data-col="1"></td>
-                <td data-row="0" data-col="2"></td>
-            </tr>
-            <tr>
-                <td data-row="1" data-col="0"></td>
-                <td data-row="1" data-col="1"></td>
-                <td data-row="1" data-col="2"></td>
-            </tr>
-            <tr>
-                <td data-row="2" data-col="0"></td>
-                <td data-row="2" data-col="1"></td>
-                <td data-row="2" data-col="2"></td>
-            </tr>
-        </table>
+
+    <div id="authSection">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="loginUsername" placeholder="Username" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+
+        <h2>Register</h2>
+        <form id="registerForm">
+            <input type="text" id="registerUsername" placeholder="Username" required>
+            <input type="password" id="registerPassword" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
     </div>
 
     <div id="gameSection" style="display:none;">
@@ -74,7 +70,6 @@
         </div>
     </div>
 
-    <button onclick="resetGame()">Reset Game</button>
     <script src="script.js"></script>
 </body>
 </html>
