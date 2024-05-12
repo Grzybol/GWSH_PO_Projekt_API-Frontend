@@ -2,6 +2,12 @@
 
 This is the frontend implementation of a Tic Tac Toe game with user authentication and game management functionalities.
 
+## Technology Stack
+- **HTML**: Structure of the web application.
+- **CSS**: Styling of the web application.
+- **JavaScript**: Logic and interactivity of the game.
+- **Backend API**: Required for user authentication and game management. 
+
 ## Table of Contents
 
 - [Overview](#overview)
