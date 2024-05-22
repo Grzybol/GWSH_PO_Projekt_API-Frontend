@@ -1,7 +1,5 @@
 const baseUrl = 'http://149.100.156.150:5000';
 
-
-
 let pollingInterval;
 
 async function fetchGameStatus() {
@@ -164,6 +162,7 @@ async function joinGame(player, gameId) {
         console.error('Error joining game:', error);
     }
 }
+
 // Function to hide game lists and show the back button
 function hideGameLists() {
     document.getElementById('createGameButton').style.display = 'none';
@@ -209,6 +208,7 @@ async function makeMove(row, col, player) {
         console.error('Error making move:', error);
     }
 }
+
 // Function to update the board and ensure event handlers are bound correctly
 function updateBoard(game) {
     console.log('Updating board for game:', game);
@@ -222,7 +222,7 @@ function updateBoard(game) {
         const row = cell.getAttribute('data-row');
         const col = cell.getAttribute('data-col');
         cell.textContent = game.board[row][col] || '';
-        if (!game.board[row][col]) {
+        if (!game.board[row][col] && !game.winner) {
             cell.onclick = () => makeMove(row, col, document.getElementById('loginUsername').value);
             cell.style.cursor = 'pointer';
         } else {
@@ -230,6 +230,21 @@ function updateBoard(game) {
             cell.style.cursor = 'default';
         }
     }
+
+    // Check if the game is over and display a message
+    if (game.winner) {
+        displayGameOverMessage(game.winner);
+        clearInterval(pollingInterval);
+    } else if (game.isDraw) {
+        displayGameOverMessage('Draw');
+        clearInterval(pollingInterval);
+    }
+}
+
+// Function to display the game over message
+function displayGameOverMessage(winner) {
+    const message = winner === 'Draw' ? 'The game is a draw!' : `Player ${winner} wins!`;
+    alert(message);
 }
 
 // Function to poll for game status updates
@@ -256,11 +271,12 @@ async function pollGameStatus() {
     }
 }
 
+// Function to start polling game status
 function startPolling() {
     if (pollingInterval) {
         clearInterval(pollingInterval);
     }
-    pollingInterval = setInterval(pollGameStatus, 1000); // Poll every 3 seconds
+    pollingInterval = setInterval(pollGameStatus, 1000); // Poll every second
 }
 
 function updateActiveGames(games) {
@@ -298,6 +314,22 @@ function updateActiveGames(games) {
         activeGamesTbody.appendChild(row);
     });
 }
+// Polling for active and completed games
+function pollGamesList() {
+    fetchActiveGames();
+    fetchCompletedGames();
+}
+
+// Start polling for game lists
+function startGamesListPolling() {
+    setInterval(pollGamesList, 5000); // Refresh every 5 seconds
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    startGamesListPolling();  // Start polling when the document is ready
+});
+
+
 // Ensure initial setup
 document.addEventListener('DOMContentLoaded', () => {
     fetchActiveGames();
