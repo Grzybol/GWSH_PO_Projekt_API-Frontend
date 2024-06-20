@@ -1,4 +1,5 @@
-const baseUrl = 'http://localhost:5000';
+const baseUrl = 'https://boxpvp.top:2083';
+
 let pollingInterval;
 
 async function fetchGameStatus() {
@@ -23,8 +24,8 @@ async function fetchActiveGames() {
     try {
         const response = await fetch(`${baseUrl}/game/active`);
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message);
+            console.error('Failed to fetch active games:', response.statusText);
+            return;  // Exit the function if the response is not OK
         }
         const data = await response.json();
         updateActiveGames(data);
@@ -68,6 +69,7 @@ async function loginUser(event) {
             fetchActiveGames();
             fetchCompletedGames();
             startPolling();
+            goToHomeScreen();
         } else {
             alert(`Error: ${data.message}`);
         }
@@ -161,6 +163,7 @@ async function joinGame(player, gameId) {
         console.error('Error joining game:', error);
     }
 }
+
 // Function to hide game lists and show the back button
 function hideGameLists() {
     document.getElementById('createGameButton').style.display = 'none';
@@ -206,6 +209,7 @@ async function makeMove(row, col, player) {
         console.error('Error making move:', error);
     }
 }
+
 // Function to update the board and ensure event handlers are bound correctly
 function updateBoard(game) {
     console.log('Updating board for game:', game);
@@ -219,7 +223,7 @@ function updateBoard(game) {
         const row = cell.getAttribute('data-row');
         const col = cell.getAttribute('data-col');
         cell.textContent = game.board[row][col] || '';
-        if (!game.board[row][col]) {
+        if (!game.board[row][col] && !game.winner) {
             cell.onclick = () => makeMove(row, col, document.getElementById('loginUsername').value);
             cell.style.cursor = 'pointer';
         } else {
@@ -227,6 +231,21 @@ function updateBoard(game) {
             cell.style.cursor = 'default';
         }
     }
+
+    // Check if the game is over and display a message
+    if (game.winner) {
+        displayGameOverMessage(game.winner);
+        clearInterval(pollingInterval);
+    } else if (game.isDraw) {
+        displayGameOverMessage('Draw');
+        clearInterval(pollingInterval);
+    }
+}
+
+// Function to display the game over message
+function displayGameOverMessage(winner) {
+    const message = winner === 'Draw' ? 'The game is a draw!' : `Player ${winner} wins!`;
+    alert(message);
 }
 
 // Function to poll for game status updates
@@ -253,11 +272,12 @@ async function pollGameStatus() {
     }
 }
 
+// Function to start polling game status
 function startPolling() {
     if (pollingInterval) {
         clearInterval(pollingInterval);
     }
-    pollingInterval = setInterval(pollGameStatus, 1000); // Poll every 3 seconds
+    pollingInterval = setInterval(pollGameStatus, 1000); // Poll every second
 }
 
 function updateActiveGames(games) {
@@ -295,6 +315,22 @@ function updateActiveGames(games) {
         activeGamesTbody.appendChild(row);
     });
 }
+// Polling for active and completed games
+function pollGamesList() {
+    fetchActiveGames();
+    fetchCompletedGames();
+}
+
+// Start polling for game lists
+function startGamesListPolling() {
+    setInterval(pollGamesList, 5000); // Refresh every 5 seconds
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    startGamesListPolling();  // Start polling when the document is ready
+});
+
+
 // Ensure initial setup
 document.addEventListener('DOMContentLoaded', () => {
     fetchActiveGames();
@@ -304,14 +340,74 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function updateCompletedGames(games) {
     const completedGamesDiv = document.getElementById('completedGames');
-    completedGamesDiv.innerHTML = '';
-    games.forEach((game) => {
-        const gameInfo = document.createElement('div');
-        gameInfo.textContent = `Game ${game.id} - Winner: ${game.winner}`;
-        completedGamesDiv.appendChild(gameInfo);
+    completedGamesDiv.innerHTML = ''; // Wyczyszczenie obecnych danych
+
+    if (games.length === 0) {
+        completedGamesDiv.textContent = 'No completed games available.';
+        return;
+    }
+
+    const table = document.createElement('table');
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th>Game ID</th>
+                <th>Players</th>
+                <th>Winner</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    `;
+
+    const tbody = table.querySelector('tbody');
+
+    games.forEach(game => {
+        const row = document.createElement('tr');
+
+        const idCell = document.createElement('td');
+        idCell.textContent = game.id;
+        row.appendChild(idCell);
+
+        const playersCell = document.createElement('td');
+        playersCell.textContent = game.players.join(', ');
+        row.appendChild(playersCell);
+
+        const winnerCell = document.createElement('td');
+        winnerCell.textContent = game.winner || 'No winner';
+        row.appendChild(winnerCell);
+
+        tbody.appendChild(row);
     });
+
+    completedGamesDiv.appendChild(table); // Dodanie tabeli do diva
 }
 
+// Function to reset the view to the initial screen (home screen)
+function goToHomeScreen() {
+    // Hide game board and any game-specific information
+    document.getElementById('gameBoard').style.display = 'none';
+    document.getElementById('currentGameId').value = ''; // Clear the current game ID if used
+
+    // Hide game-specific buttons and sections
+    document.getElementById('createGameButton').style.display = 'block';
+    document.getElementById('activeGamesTable').style.display = 'block';
+    document.getElementById('completedGames').style.display = 'block';
+    document.getElementById('backToHomeButton').style.display = 'none';
+
+    // Clear any interval for polling specific game status
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+
+    // Optionally refresh the lists of games if needed
+    fetchActiveGames();
+    fetchCompletedGames();
+}
+
+// Adding event listener to the "back to home" button
+document.getElementById('backToHomeButton').addEventListener('click', goToHomeScreen);
 document.getElementById('loginForm').addEventListener('submit', loginUser);
 document.getElementById('registerForm').addEventListener('submit', registerUser);
 document.getElementById('createGameButton').addEventListener('click', () => {
